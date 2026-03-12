@@ -23,7 +23,6 @@ COPY services ./services
 COPY model ./model
 COPY testsuite ./testsuite
 COPY themes ./themes
-COPY theme ./theme
 COPY docs ./docs
 COPY operator ./operator
 COPY distribution ./distribution
