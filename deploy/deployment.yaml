@@ -90,7 +90,7 @@ spec:
               value: "xforwarded"
 
             - name: KC_HOSTNAME
-              value: "sso.example.com"
+              value: "keycloak.next.ttthi.co.th"
 
             - name: KC_HOSTNAME_STRICT
               value: "true"
