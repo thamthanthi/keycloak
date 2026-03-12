@@ -5,10 +5,11 @@ COPY . .
 
 # install node + pnpm
 RUN apt-get update && \
-    apt-get install -y curl && \
+    apt-get install -y curl git && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
-    npm install -g pnpm
+    corepack enable && \
+    corepack prepare pnpm@latest --activate
 
 RUN node -v && pnpm -v
 
@@ -24,7 +25,6 @@ RUN chmod +x mvnw && \
     test -n "$ARTIFACT" && \
     mkdir -p /out && \
     cp "$ARTIFACT" /out/keycloak.tar.gz
-
 FROM eclipse-temurin:21-jre
 
 ENV KC_HEALTH_ENABLED=true \
