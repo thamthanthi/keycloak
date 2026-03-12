@@ -3,28 +3,35 @@ FROM eclipse-temurin:21-jdk AS builder
 WORKDIR /src
 COPY . .
 
-# install node + pnpm
 RUN apt-get update && \
-    apt-get install -y curl git && \
+    apt-get install -y curl git ca-certificates && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
-    corepack enable && \
-    corepack prepare pnpm@latest --activate
+    npm install -g pnpm
 
-RUN node -v && pnpm -v
+RUN echo "=== versions ===" && \
+    java -version && \
+    node -v && \
+    npm -v && \
+    pnpm -v
 
-# build keycloak
 RUN chmod +x mvnw && \
+    echo "=== start maven build ===" && \
     ./mvnw -pl quarkus/deployment,quarkus/dist \
-    -am \
-    -DskipTests \
-    -DskipProtoLock=true \
-    clean install && \
+      -am \
+      -DskipTests \
+      -DskipProtoLock=true \
+      clean install -e -X
+
+RUN echo "=== dist target ===" && \
     ls -lah quarkus/dist/target && \
-    ARTIFACT=$(find quarkus/dist/target -maxdepth 1 -type f -name "keycloak-*.tar.gz" | head -n 1) && \
+    find quarkus/dist/target -maxdepth 1 -type f | sort
+
+RUN ARTIFACT="$(find quarkus/dist/target -maxdepth 1 -type f -name 'keycloak-*.tar.gz' | head -n 1)" && \
     test -n "$ARTIFACT" && \
     mkdir -p /out && \
     cp "$ARTIFACT" /out/keycloak.tar.gz
+
 FROM eclipse-temurin:21-jre
 
 ENV KC_HEALTH_ENABLED=true \
