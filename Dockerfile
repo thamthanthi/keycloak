@@ -4,8 +4,7 @@ WORKDIR /src
 COPY . .
 
 RUN chmod +x mvnw && \
-    ./mvnw -f pom.xml clean install -DskipTestsuite -DskipExamples -DskipTests && \
-    ./mvnw package -pl quarkus/server/,quarkus/dist/ -DskipTests && \
+    ./mvnw -pl quarkus/dist -am package -DskipTests -DskipTestsuite -DskipExamples && \
     ls -lah quarkus/dist/target && \
     ARTIFACT="$(find quarkus/dist/target -maxdepth 1 -type f -name 'keycloak-*.tar.gz' | head -n 1)" && \
     test -n "$ARTIFACT" && \
