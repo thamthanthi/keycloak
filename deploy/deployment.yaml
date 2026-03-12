@@ -31,10 +31,10 @@ spec:
 
       containers:
         - name: keycloak
-
           image: __KEYCLOAK_IMAGE__
           imagePullPolicy: Always
-
+          command:
+            - /opt/keycloak/bin/kc.sh
           args:
             - start
 
