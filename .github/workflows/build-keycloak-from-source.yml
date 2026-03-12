@@ -107,6 +107,15 @@ jobs:
             --from-literal=KC_BOOTSTRAP_ADMIN_PASSWORD='${{ secrets.KC_BOOTSTRAP_ADMIN_PASSWORD }}' \
             --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Create or update GHCR pull secret
+        run: |
+          kubectl -n "${K8S_NAMESPACE}" create secret docker-registry ghcr-secret \
+            --docker-server=ghcr.io \
+            --docker-username='${{ github.repository_owner }}' \
+            --docker-password='${{ secrets.GHCR_PAT }}' \
+            --docker-email='none@local' \
+            --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy Keycloak
         run: |
           FULL_IMAGE="${IMAGE_NAME}:sha-${{ steps.vars.outputs.short_sha }}"
