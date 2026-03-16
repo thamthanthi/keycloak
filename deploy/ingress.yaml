@@ -17,7 +17,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: keycloak.next.ttthi.co.th
+    - host: auth.next.ttthi.co.th
       http:
         paths:
           - path: /
